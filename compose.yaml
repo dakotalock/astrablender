@@ -3,7 +3,7 @@ name: astrablender
 services:
   blender:
     image: lscr.io/linuxserver/blender:5.2.1-ls238
-    platform: linux/amd64
+    platform: linux/arm64
     environment:
       PUID: "1000"
       PGID: "1000"
@@ -36,6 +36,7 @@ services:
       PASSWORD_HASH: ${PASSWORD_HASH:?Run configure.py}
       SESSION_KEY: ${SESSION_KEY:?Run configure.py}
       UPSTREAM: http://blender:3000
+      OPEN_ACCESS: "true"
     depends_on: [blender]
     read_only: true
     tmpfs: [/tmp]
