@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blender workstation · Sign in</title>
+<style>
+  *{box-sizing:border-box}body{margin:0;min-height:100svh;display:grid;place-items:center;background:#191b20;color:#f4f5f7;font:16px/1.5 system-ui,sans-serif;padding:24px}main{width:100%;max-width:420px}h1{font-size:30px;line-height:1.2;margin-bottom:12px}p{color:#b6bfcd}label{display:block;margin-top:20px}input,button{width:100%;font:inherit;padding:12px 14px;border-radius:6px;margin-top:7px}input{border:1px solid #59616e;background:#23272f;color:white}input:focus{outline:2px solid #ffb664}button{background:#e98b35;color:#16191f;font-weight:700;border:0;margin-top:24px;cursor:pointer}footer{font-size:12px;color:#9ca8b8;margin-top:36px}.error{color:#ffb9a9;min-height:24px}
+</style>
+<main>
+  <h1>Blender workstation</h1>
+  <p>Sign in to open the remote Blender desktop.</p>
+  <p class="error" role="status">{{MESSAGE}}</p>
+  <form method="post" action="/__workstation/login">
+    <label for="username">Username</label>
+    <input id="username" name="username" autocomplete="username" maxlength="64" required>
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" maxlength="1024" required>
+    <button type="submit">Open Blender</button>
+  </form>
+  <footer>Co-created by Dakota Rain Lock and GPT Astra.<br>Blender is created by its own contributors. This is an independent hosting project.</footer>
+</main>
+</html>

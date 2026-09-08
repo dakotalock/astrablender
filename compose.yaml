@@ -1,0 +1,69 @@
+name: astrablender
+
+services:
+  blender:
+    image: lscr.io/linuxserver/blender:5.2.1-ls238
+    platform: linux/amd64
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Etc/UTC
+      TITLE: Blender
+      PIXELFLUX_WAYLAND: "false"
+      SELKIES_ENCODER: jpeg
+      SELKIES_FRAMERATE: "20"
+      SELKIES_MANUAL_WIDTH: "1440"
+      SELKIES_MANUAL_HEIGHT: "900"
+      MAX_RES: 1920x1080
+      SELKIES_MICROPHONE_ENABLED: "false"
+      SELKIES_GAMEPAD_ENABLED: "false"
+      SELKIES_ENABLE_SHARING: "false"
+      SELKIES_FILE_TRANSFERS: upload,download
+      FILE_MANAGER_PATH: /config
+    volumes:
+      - blender-data:/config
+      - ./scripts:/opt/workstation-checks:ro
+    shm_size: 1gb
+    restart: unless-stopped
+    networks: [desktop]
+    # No published desktop port, host Docker socket, or privileged mode.
+
+  gateway:
+    build: ./gateway
+    environment:
+      PUBLIC_ORIGIN: https://${WORKSTATION_DOMAIN:?Run python3 scripts/configure.py first}
+      LOGIN_USER: ${LOGIN_USER:?Run configure.py}
+      PASSWORD_HASH: ${PASSWORD_HASH:?Run configure.py}
+      SESSION_KEY: ${SESSION_KEY:?Run configure.py}
+      UPSTREAM: http://blender:3000
+    depends_on: [blender]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    networks: [desktop, edge]
+
+  caddy:
+    image: caddy:2-alpine
+    environment:
+      WORKSTATION_DOMAIN: ${WORKSTATION_DOMAIN:?Run configure.py}
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on: [gateway]
+    restart: unless-stopped
+    networks: [edge]
+
+networks:
+  desktop:
+  edge:
+
+volumes:
+  blender-data:
+  caddy-data:
+  caddy-config:
