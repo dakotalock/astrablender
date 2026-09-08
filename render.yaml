@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: astrablender
+    runtime: static
+    repo: https://github.com/dakotalock/astrablender
+    branch: main
+    buildCommand: "true"
+    staticPublishPath: ./site
+    autoDeployTrigger: commit
